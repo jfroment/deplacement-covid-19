@@ -76,6 +76,19 @@ function getProfile () {
   return fields
 }
 
+const autoFill = () => {
+  const fieldNames = ["lieunaissance",	"address", "town", "birthday", "firstname",	"lastname", "zipcode"]
+  for (const name of fieldNames) {
+    $("#field-" + name).value = localStorage.getItem(name)
+  }
+  const reasons = localStorage.getItem("reasons") ? localStorage.getItem("reasons").split("-") : []
+  for (const reason of reasons) {
+    $("#checkbox-" + reason).checked = true
+  }
+}
+document.addEventListener('DOMContentLoaded', autoFill)
+
+
 function idealFontSize (font, text, maxWidth, minSize, defaultSize) {
   let currentSize = defaultSize
   let textWidth = font.widthOfTextAtSize(text, defaultSize)
@@ -239,7 +252,7 @@ $('#generate-btn').addEventListener('click', async event => {
   saveProfile()
   const reasons = getAndSaveReasons()
   const pdfBlob = await generatePdf(getProfile(), reasons)
-  localStorage.clear()
+  //localStorage.clear()
   const creationDate = new Date().toLocaleDateString('fr-CA')
   const creationHour = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }).replace(':', '-')
   downloadBlob(pdfBlob, `attestation-${creationDate}_${creationHour}.pdf`) 
